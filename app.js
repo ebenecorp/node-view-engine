@@ -1,12 +1,28 @@
 const express = require("express");
 const { title } = require("process");
+const mongoose = require("mongoose");
+const { result } = require("lodash");
 const app = express();
+
+const dbUrl =
+  "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false";
+
+mongoose
+  .connect(dbUrl)
+  .then((result) => {
+    console.log("connected to DB");
+    app.listen(3000);
+
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.set("view engine", "ejs");
 
-app.listen(3000);
+// app.listen(3000);
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   const blogs = [
