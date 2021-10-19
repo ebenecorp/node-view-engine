@@ -41,35 +41,40 @@ app.get("/about-us", (req, res) => {
     });
 });
 
-app.get("/", (req, res) => {
-  const blogs = [
-    {
-      title: "A title 1",
-      snippets:
-        " a random body of text is being displayed to be seen for every one 1",
-    },
-    {
-      title: "A title 2",
-      snippets:
-        " a random body of text is being displayed to be seen for every one 2",
-    },
-    {
-      title: "A title 3",
-      snippets:
-        " a random body of text is being displayed to be seen for every one 3",
-    },
-    {
-      title: "A title 4",
-      snippets:
-        " a random body of text is being displayed to be seen for every one 4",
-    },
-  ];
+app.get('/all-blogs', (req, res)=>{
+    Blog.find().then(result=>{
+        res.send(result)
+    }).then(err =>{
+        console.log(err)
+    })
+})
 
-  res.render("index", {
-    title: "Home",
-    blogs,
-  });
+app.get('/single-blog', (req, res)=>{
+    Blog.findById('616f319637479c1ac9855e5a').then(result=>{
+        res.send(result)
+    }).then(err =>{
+        console.log(err)
+    })
+})
+
+
+
+app.get("/", (req, res) => {
+    res.redirect('/blogs')
 });
+
+app.get('/blogs', (req, res) => {
+      Blog.find().sort({createdAt: -1}).then((result)=>{
+            res.render('index', {
+                title: "All Blogs",
+                blogs: result
+              })
+            }).catch(err=>{
+              console.log(err)
+            })
+      }) 
+
+
 app.get("/about", (req, res) => {
   // res.send('Hello World')
   res.render("about", {
